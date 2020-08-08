@@ -21,13 +21,13 @@ import br.com.acbueno.listcompras.repository.ListShopRepository;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/shoplist")
 public class ListShopController {
 
 	@Autowired
 	ListShopRepository listShopRepository;
 
-	@GetMapping("list/shop/all") 
+	@GetMapping("list/all")
 	public ResponseEntity<List<ListShop>> getAllList() {
 
 		try {
@@ -45,7 +45,7 @@ public class ListShopController {
 		}
 	}
 
-	@GetMapping("list/shop/{dateBuy}")
+	@GetMapping("list/{dateBuy}")
 	public ResponseEntity<List<ListShop>> getListShopByDateBuy(@PathVariable("dateBuy") Date dateBuy) {
 
 		try {
@@ -63,7 +63,7 @@ public class ListShopController {
 		}
 	}
 
-	@GetMapping("list/shop/{id}")
+	@GetMapping("list/{id}")
 	public ResponseEntity<ListShop> getListShopById(@PathVariable("id") int id) {
 
 		try {
@@ -80,7 +80,7 @@ public class ListShopController {
 
 	}
 
-	@GetMapping("list/shop/{name}")
+	@GetMapping("list/{name}")
 	public ResponseEntity<ListShop> getListShopByName(@PathVariable("name") String name) {
 
 		try {
@@ -97,7 +97,7 @@ public class ListShopController {
 		}
 	}
 
-	@PostMapping("list/shop/create")
+	@PostMapping("create")
 	public ResponseEntity<ListShop> createListShop(@RequestBody ListShop listShop) {
 
 		try {
@@ -108,7 +108,7 @@ public class ListShopController {
 		}
 	}
 
-	@PutMapping("list/shop/update/{id}")
+	@PutMapping("update/{id}")
 	public ResponseEntity<ListShop> updateListShop(@PathVariable("id") int id, @RequestBody ListShop listShop) {
 
 		Optional<ListShop> listShopData = listShopRepository.findById(id);
@@ -125,7 +125,7 @@ public class ListShopController {
 		}
 	}
 
-	@DeleteMapping("list/shop/delete/{id}")
+	@DeleteMapping("delete/{id}")
 	public ResponseEntity<HttpStatus> deleteById(@PathVariable("id") int id) {
 		try {
 			listShopRepository.deleteById(id);
@@ -135,7 +135,7 @@ public class ListShopController {
 		}
 	}
 
-	@DeleteMapping("list/shop/delete") 
+	@DeleteMapping("delete/all")
 	public ResponseEntity<HttpStatus> deleteListAll() {
 		try {
 			listShopRepository.deleteAll();
