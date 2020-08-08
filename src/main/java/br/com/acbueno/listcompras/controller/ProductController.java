@@ -25,155 +25,156 @@ import br.com.acbueno.listcompras.repository.ProductRepository;
 @RequestMapping("/api/product")
 public class ProductController {
 
-	@Autowired
-	ProductRepository productRepository;
+  @Autowired
+  ProductRepository productRepository;
 
-	@Autowired
-	ListShopRepository listShopRepository;
+  @Autowired
+  ListShopRepository listShopRepository;
 
-	@GetMapping("list")
-	public ResponseEntity<List<Product>> getAllProduct() {
-		try {
+  @GetMapping("list")
+  public ResponseEntity<List<Product>> getAllProduct() {
+    try {
 
-			List<Product> product = productRepository.findAll();
-			if (product.isEmpty()) {
-				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-			}
+      List<Product> product = productRepository.findAll();
+      if (product.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      }
 
-			return new ResponseEntity<>(product, HttpStatus.OK);
+      return new ResponseEntity<>(product, HttpStatus.OK);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    } catch (Exception e) {
+      e.printStackTrace();
+      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 
-	@GetMapping("list/{id}")
-	public ResponseEntity<Product> getProducById(@PathVariable int id) {
+  @GetMapping("list/{id}")
+  public ResponseEntity<Product> getProducById(@PathVariable int id) {
 
-		try {
-			Optional<Product> productData = productRepository.findById(id);
+    try {
+      Optional<Product> productData = productRepository.findById(id);
 
-			if (productData.isPresent()) {
-				return new ResponseEntity<>(productData.get(), HttpStatus.OK);
-			} else {
-				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-			}
+      if (productData.isPresent()) {
+        return new ResponseEntity<>(productData.get(), HttpStatus.OK);
+      } else {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      }
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    } catch (Exception e) {
+      e.printStackTrace();
+      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 
-	@GetMapping("list{dateBuy}")
-	public ResponseEntity<List<Product>> getProductByDate(@PathVariable Date dateBuy) {
+  @GetMapping("list{dateBuy}")
+  public ResponseEntity<List<Product>> getProductByDate(@PathVariable Date dateBuy) {
 
-		try {
+    try {
 
-			List<Product> productData = productRepository.findByDateBuy(dateBuy);
+      List<Product> productData = productRepository.findByDateBuy(dateBuy);
 
-			if (!productData.isEmpty()) {
-				return new ResponseEntity<>(productData, HttpStatus.OK);
-			} else {
-				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+      if (!productData.isEmpty()) {
+        return new ResponseEntity<>(productData, HttpStatus.OK);
+      } else {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 
-	@GetMapping("name/{nameProduct}")
-	public ResponseEntity<Product> getProdocutByName(@PathVariable String nameProduct) {
-		try {
+  @GetMapping("name/{nameProduct}")
+  public ResponseEntity<Product> getProdocutByName(@PathVariable String nameProduct) {
+    try {
 
-			Optional<List<Product>> productData = Optional.ofNullable(productRepository.findByProductName(nameProduct));
+      Optional<List<Product>> productData =
+          Optional.ofNullable(productRepository.findByProductName(nameProduct));
 
-			if (productData.isPresent()) {
-				return new ResponseEntity<>(productData.get().get(0), HttpStatus.OK);
-			} else {
-				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+      if (productData.isPresent()) {
+        return new ResponseEntity<>(productData.get().get(0), HttpStatus.OK);
+      } else {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 
-	@PostMapping("create")
-	public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+  @PostMapping("create")
+  public ResponseEntity<Product> createProduct(@RequestBody Product product) {
 
-		try {
+    try {
 
-			Optional<ListShop> listShopDate = listShopRepository.findById(product.getListShop().getId());
+      Optional<ListShop> listShopDate = listShopRepository.findById(product.getListShop().getId());
 
-			product.setListShop(listShopDate.get());
+      product.setListShop(listShopDate.get());
 
-			Product productData = productRepository.save(new Product(product.getProductName(), product.getQtd(),
-					product.getDateBuy(), product.getListShop()));
+      Product productData = productRepository.save(new Product(product.getProductName(),
+          product.getQtd(), product.getDateBuy(), product.getListShop()));
 
-			return new ResponseEntity<>(productData, HttpStatus.OK);
+      return new ResponseEntity<>(productData, HttpStatus.OK);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    } catch (Exception e) {
+      e.printStackTrace();
+      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 
-	@PutMapping("update/{id}")
-	public ResponseEntity<Product> updateProduct(@PathVariable("id") int id, @RequestBody Product product) {
+  @PutMapping("update/{id}")
+  public ResponseEntity<Product> updateProduct(@PathVariable("id") int id,
+      @RequestBody Product product) {
 
-		Optional<Product> productData = productRepository.findById(id);
+    Optional<Product> productData = productRepository.findById(id);
 
-		if (productData.isPresent()) {
-			Product productUpdate = productData.get();
-			if(product.getProductName()!=null) {
-				productUpdate.setProductName(product.getProductName());
-			}
-			if(product.getQtd()!=productData.get().getQtd()) {
-				productUpdate.setQtd(product.getQtd());
-			}
-			
-			if(product.getDateBuy()!=null) {
-				productUpdate.setDateBuy(product.getDateBuy());
-			}
-			
-			if (product.getListShop() != null) {
-				Optional<ListShop> listShop = listShopRepository.findById(product.getListShop().getId());
-				if (listShop.isPresent()) {
-					productUpdate.setListShop(listShop.get());
-				}
+    if (productData.isPresent()) {
+      Product productUpdate = productData.get();
+      if (product.getProductName() != null) {
+        productUpdate.setProductName(product.getProductName());
+      }
+      if (product.getQtd() != productData.get().getQtd()) {
+        productUpdate.setQtd(product.getQtd());
+      }
 
-			}
-			
-			return new ResponseEntity<>(productRepository.save(productUpdate), HttpStatus.OK);
+      if (product.getDateBuy() != null) {
+        productUpdate.setDateBuy(product.getDateBuy());
+      }
 
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+      if (product.getListShop() != null) {
+        Optional<ListShop> listShop = listShopRepository.findById(product.getListShop().getId());
+        if (listShop.isPresent()) {
+          productUpdate.setListShop(listShop.get());
+        }
 
-	}
-	
-	@DeleteMapping(path = "delete/{id}")
-	public ResponseEntity<?> deleteProductById(@PathVariable("id") int id){
-		
-		return productRepository.findById(id)
-				.map(record -> {
-					productRepository.deleteById(id);
-					return ResponseEntity.ok().build();
-				}).orElse(ResponseEntity.notFound().build());
-		
-	} 
-	
-	@DeleteMapping(path = "delete/all") 
-	public ResponseEntity<HttpStatus> deleteAllProduct() {
-		try {
-			productRepository.deleteAll();
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-		}
-	}
+      }
+
+      return new ResponseEntity<>(productRepository.save(productUpdate), HttpStatus.OK);
+
+    } else {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+  }
+
+  @DeleteMapping(path = "delete/{id}")
+  public ResponseEntity<?> deleteProductById(@PathVariable("id") int id) {
+
+    return productRepository.findById(id).map(record -> {
+      productRepository.deleteById(id);
+      return ResponseEntity.ok().build();
+    }).orElse(ResponseEntity.notFound().build());
+
+  }
+
+  @DeleteMapping(path = "delete/all")
+  public ResponseEntity<HttpStatus> deleteAllProduct() {
+    try {
+      productRepository.deleteAll();
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    } catch (Exception e) {
+      return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+    }
+  }
 
 }

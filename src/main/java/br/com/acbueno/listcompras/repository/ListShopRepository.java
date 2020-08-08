@@ -7,10 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.com.acbueno.listcompras.model.ListShop;
 
-public interface ListShopRepository extends JpaRepository<ListShop, Integer>  {
-	
-	List<ListShop> findByListDate(Date listDate);
-	
-	List<ListShop> findByName(String name);
+public interface ListShopRepository extends JpaRepository<ListShop, Integer> {
+
+  List<ListShop> findByListDate(Date listDate);
+
+  List<ListShop> findByName(String name);
 
 }
